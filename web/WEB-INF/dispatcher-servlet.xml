@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--自动扫描包下注解-->
+    <!--<context:component-scan base-package="cn.dormitory.controller"/>-->
+    <!--一键式配置方法   自动注册DefaultAnnotationHandlerMapping(处理器映射)与（处理器适配器）-->
+    <!--通过以上两个，找出@Controller @RequestMapping等注解的支持-->
+
+    <!--视图解析器 完成视图对应-->
+    <!--渲染输出-->
+    <!--P.S.浏览器下无权直接访问WEB-INF中的资源，因此只能用视图渲染返回-->
+    <bean id="viewResolver"
+          class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <!--前缀-->
+        <property name="prefix" value="/WEB-INF/"/>
+        <!--后缀-->
+        <property name="suffix" value=".jsp"/>
+    </bean>
+    <!-- 定义文件上传解析器 -->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <!-- 设定默认编码 -->
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <!-- 设定文件上传的最大值10MB，10*1024*1024 -->
+        <property name="maxUploadSize" value="104857600"></property>
+        <!--限制超出-->
+        <property name="maxInMemorySize" value="4096"/>
+    </bean>
+</beans>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--自动扫描包下注解-->
+    <context:component-scan base-package="cn"/>
+    <!--<context:annotation-config/>-->
+    <!--少了这个就会报404错误-->
+    <mvc:default-servlet-handler/>
+
+    <!--使用默认的servlet来设置响应静态文件-->
+    <mvc:default-servlet-handler/>
+
+    <!--配置允许访问的静态文件-->
+    <mvc:resources location="/WEB-INF/static/" mapping="/static/**"/>
+
+    <!--设置默认配置方案-->
+    <!--需要添加<mvc:annotation-driven/>，不然请求不能被捕获,且该配置放在扫描包下，否则将无法解析控制器类-->
+    <mvc:annotation-driven/>
+    <!--引入配置文件-->
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <!--引入jdbc配置文件-->
+        <property name="location" value="classpath:jdbc.properties"/>
+    </bean>
+
+    <!--配置数据源，这里使用c3p0-->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="driverClass" value="${jdbc.driver}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <!--初始化连接池中的连接数，取值在min与max之间 默认为3-->
+        <property name="initialPoolSize" value="10"/>
+        <!--最大空闲时间，60秒内未使用则连接被丢弃。若为0则永不丢弃。默认值: 0 -->
+        <property name="maxIdleTime" value="30"/>
+        <!--连接池中保留的最大连接数。默认值: 15 -->
+        <property name="maxPoolSize" value="100"/>
+        <!-- 连接池中保留的最小连接数，默认为：3-->
+        <property name="minPoolSize" value="10"/>
+        <!-- 当连接池连接耗尽时，客户端调用getConnection()后等待获取新连接的时间，超时后将抛出SQLException，如设为0则无限期等待。单位毫秒。默认: 0 -->
+        <property name="checkoutTimeout" value="3000"/>
+        <!--当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。默认值: 3 -->
+        <property name="acquireIncrement" value="2"/>
+        <!--定义在从数据库获取新连接失败后重复尝试的次数。默认值: 30 ；小于等于0表示无限次-->
+        <property name="acquireRetryAttempts" value="0"/>
+        <!--重新尝试的时间间隔，默认为：1000毫秒-->
+        <property name="acquireRetryDelay" value="1000"/>
+        <!--每60秒检查所有连接池中的空闲连接。默认值: 0，不检查 -->
+        <property name="idleConnectionTestPeriod" value="60"/>
+    </bean>
+
+    <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+    <bean id="sqlSessionFactory"
+          class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <!--springMVC在加载xml生成上下文环境的时候，会自动扫描制定位置的Mapper接口，然后自动生成代理类，实现接口内容。
+    这样在调用接口的时候，实际上是通过代理类去调用mybatis的xml中的sql语句-->
+
+    <!--使dao类支持mybatis注解-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.dormitory.dao"/>
+    </bean>
+
+
+    <!--第三步: 事物 -->
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <!-- 使用注解来控制事务 -->
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+    <!-- 配置事物增强,事物如何切入-->
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <!-- 所有方法都是事物方法 -->
+            <tx:method name="*"/>
+            <!-- 以get开始的所有方法 -->
+            <tx:method name="get*" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+</beans>
