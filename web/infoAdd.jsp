@@ -91,7 +91,7 @@
         </div>
     </div>
 </div>
-<script src="/static/js/infoAd.js"></script>
+<script src="/static/js/infoAdd.js"></script>
 <!-- Bootstrap js-->
 <!-- 加载 Bootstrap 的所有 JavaScript 插件。你也可以根据需要只加载单个插件。 -->
 <script src="/static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
