@@ -8,7 +8,7 @@
     <title>欢迎登陆主页</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+    <link rel="icon" href="././favicon.ico">
     <!-- Bootstrap jq-->
     <script src="/static/bootstrap-3.3.7-dist/jquery/jquery-3.3.1.min.js"></script>
     <!-- Bootstrap css-->
@@ -43,7 +43,7 @@
             <div class="mastfoot">
                 <div class="inner">
                     <p>广东技术师范学院<a href="http://getbootstrap.com">天河学院</a>,
-                        计算机科学与工程学院 <a href="https://twitter.com/mdo">16计科1班</a>.
+                        计算机科学与工程学院 <a href="https://twitter.com/mdo"></a>.
                     </p>
                 </div>
             </div>

@@ -46,7 +46,6 @@ public class StudentController {
         Student students = studentService.getStudentInfo (id);
         return students;
     }
-
     /**
      * 根据id删除指定学生
      */

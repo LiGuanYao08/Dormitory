@@ -53,7 +53,6 @@ function addTeacher() {
     var teaJobStatus = document.getElementById("teaJobStatus").value;
     var teaSta = teaJobStatus.substr(0, 1);
     var fileData = document.getElementById("browerfile").files[0];
-    alert(fileData);
     //获取当前时间
     var myDate = new Date;
     //当前年 月 日
@@ -75,7 +74,6 @@ function addTeacher() {
     $.ajax({
         type: "POST",
         async: false,
-        cache: false,
         mimeType: "multipart/form-data",
         url: "/insertTeacher",
         data: formData,
